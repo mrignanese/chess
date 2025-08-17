@@ -4,7 +4,7 @@ INCLUDE = $(shell pkg-config --cflags glfw3 glew glm) -Isrc/ -Isrc/renderer/incl
 LDFLAGS = $(shell pkg-config --static --libs glfw3 glew) -lGL
 
 SRC = $(wildcard src/*.cpp src/renderer/src/*.cpp src/stb_image/stb_image.cpp)
-BIN = main
+BIN = build/main
 
 $(BIN): $(SRC)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) $(SRC) -o $(BIN) $(LDFLAGS)
