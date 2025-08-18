@@ -8,6 +8,7 @@ This project uses OpenGL and the following libraries are needed:
 - [GLFW](https://www.glfw.org/): C library for OpenGL used to create the window, receiving inputs and events
 - [GLEW](https://glew.sourceforge.net/): C/C++ extension library to access OpenGL functionalities to render chessboard and pieces
 - [GLM](https://glm.g-truc.net/0.9.9/api/index.html): mathematics library
+- [ImGui](https://github.com/ocornut/imgui):
 
 ### Installing dependencies on Ubuntu
 ```bash
