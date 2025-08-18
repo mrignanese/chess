@@ -1,10 +1,11 @@
 CXX = g++
 CXXFLAGS = -Wall -g -O0 -std=c++20
-INCLUDE = $(shell pkg-config --cflags glfw3 glew glm) -Isrc/ -Isrc/renderer/include 
+INCLUDE = $(shell pkg-config --cflags glfw3 glew glm) -Iinclude/ -Idependecies/
 LDFLAGS = $(shell pkg-config --static --libs glfw3 glew) -lGL
 
-SRC = $(wildcard src/*.cpp src/renderer/src/*.cpp src/stb_image/stb_image.cpp src/imgui/*.cpp)
-BIN = build/main
+SRC = $(wildcard src/*.cpp src/renderer/*.cpp dependecies/stb_image/stb_image.cpp \
+		dependecies/imgui/*.cpp src/core/*.cpp)
+BIN = build/application
 
 $(BIN): $(SRC)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) $(SRC) -o $(BIN) $(LDFLAGS)
