@@ -1,10 +1,11 @@
 #pragma once
 
-#include <GLFW/glfw3.h>
+#include "GL_pch.h"
 
 class Window {
    private:
 	int mWidth, mHeight;
+	int mFbWidth, mFbHeight;
 	GLFWwindow* mWindow;
 
    public:
@@ -16,10 +17,14 @@ class Window {
 	bool IsOpen() const;
 	int ShouldClose() const;
 	void SwapBuffers() const;
+	void PollEvents() const;
+	void OnResize();
 
 	Window& operator=(const Window&) = delete;
 
 	int GetWidth() const;
 	int GetHeight() const;
+	int GetFBWidth() const;
+	int GetFBHeight() const;
 	GLFWwindow* GetWindow() const;
 };

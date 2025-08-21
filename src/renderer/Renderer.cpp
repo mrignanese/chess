@@ -40,7 +40,14 @@ bool GLLogCall(const char* function, const char* file, int line) {
 	return true;
 }
 
-void Renderer::Clear() const {
+Renderer::Renderer() {
+	if (glewInit() != GLEW_OK)
+		std::cout << "Failed to initialize GLEW!" << std::endl;
+
+	std::cout << glGetString(GL_VERSION) << std::endl;
+}
+
+void Renderer::Clear() {
 	GLCall(glClear(GL_COLOR_BUFFER_BIT));
 }
 
@@ -50,4 +57,9 @@ void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& 
 	ib.Bind();
 
 	GLCall(glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr));
+}
+
+void Renderer::EnableBlending() const {
+	GLCall(glEnable(GL_BLEND));
+	GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 }

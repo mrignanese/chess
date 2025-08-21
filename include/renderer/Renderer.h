@@ -1,8 +1,8 @@
 #pragma once
 
-#include <GL/glew.h>
 #include <signal.h>
 
+#include "GL_pch.h"
 #include "IndexBuffer.h"
 #include "Shader.h"
 #include "VertexArray.h"
@@ -22,6 +22,9 @@ std::string GLErrorToString(GLenum error);
 
 class Renderer {
    public:
-	void Clear() const;
-	void Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader);
+	Renderer();
+	~Renderer() = default;
+	static void Clear();
+	static void Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader);
+	void EnableBlending() const;
 };
