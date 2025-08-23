@@ -1,9 +1,12 @@
 #pragma once
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <filesystem>
+#include <iostream>
 #include <memory>
+#include <string>
+#include <unordered_map>
 
+#include "GL_pch.h"
 #include "core/Mouse.h"
 #include "core/Window.h"
 #include "renderer/IndexBuffer.h"
@@ -15,30 +18,35 @@
 
 class BoardRenderer {
    private:
+	enum class SquareColor { DARK, LIGHT };
+
 	std::shared_ptr<Window> mWindow;
 	std::shared_ptr<Mouse> mMouse;
-	float mPositions[16];       // array containing vertex 2D coordinates and texture 2D coordinates
-    unsigned int mIndices[6];   // indices to access mPositions elements
+	float mPositions[16];      // array containing vertex 2D coordinates and texture 2D coordinates
+	unsigned int mIndices[6];  // indices to access mPositions elements
 
 	VertexBuffer mVb;
 	IndexBuffer mIb;
 	VertexArray mVa;
 	VertexBufferLayout mLayout;
-	Shader mShader;
-	Texture mTexture;
+	Shader mSquareShader, mPieceShader;
 	glm::mat4 mProj, mView, mModel, mMVP;
-
 	float mSquareSize;
+	std::unordered_map<std::string, std::shared_ptr<Texture>> mPieceTextures;
 
    public:
 	BoardRenderer(const std::shared_ptr<Window>& window, const std::shared_ptr<Mouse>& mouse);
 	BoardRenderer(const BoardRenderer&) = delete;
-	~BoardRenderer();
+	~BoardRenderer() = default;
 
 	BoardRenderer& operator=(const BoardRenderer&) = delete;
 
-	void Draw(Renderer& renderer);
+	void Draw();
+	void DrawPiece(const std::string& pieceName, const std::string& square);
+	void DestroyPiece(const std::string& name, const std::string& square);
 
    private:
-	void DrawSquare(Renderer& renderer, int row, int col);
+	void DrawSquare(int row, int col);
+	std::pair<int, int> GetCoordinatesFromSquareName(const std::string& name) const;
+	std::string GetSquareNameFromCoordinates(int row, int col) const;
 };

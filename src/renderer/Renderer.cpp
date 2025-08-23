@@ -47,11 +47,16 @@ Renderer::Renderer() {
 	std::cout << glGetString(GL_VERSION) << std::endl;
 }
 
-void Renderer::Clear() {
+Renderer& Renderer::Get() {
+	static Renderer renderer;
+	return renderer;
+}
+
+void Renderer::ClearImpl() {
 	GLCall(glClear(GL_COLOR_BUFFER_BIT));
 }
 
-void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) {
+void Renderer::DrawImpl(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) {
 	shader.Bind();
 	va.Bind();
 	ib.Bind();
@@ -59,7 +64,7 @@ void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& 
 	GLCall(glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr));
 }
 
-void Renderer::EnableBlending() const {
+void Renderer::EnableBlendingImpl() {
 	GLCall(glEnable(GL_BLEND));
 	GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 }

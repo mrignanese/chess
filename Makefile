@@ -4,7 +4,7 @@ INCLUDE = $(shell pkg-config --cflags glfw3 glew glm) -Iinclude/ -Idependecies/
 LDFLAGS = $(shell pkg-config --static --libs glfw3 glew) -lGL
 
 SRC = $(wildcard src/*.cpp src/renderer/*.cpp dependecies/stb_image/stb_image.cpp \
-		dependecies/imgui/*.cpp src/core/*.cpp)
+		dependecies/imgui/*.cpp src/core/*.cpp src/game/*.cpp)
 BIN = build/application
 
 # pre compiled header
