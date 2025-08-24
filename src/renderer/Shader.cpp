@@ -4,18 +4,44 @@
 #include <iostream>
 #include <sstream>
 
-#include "renderer/Renderer.h"
+#include "renderer/GLError.h"
 
 Shader::Shader(const std::string& filepath) : mFilePath(filepath), mRendererID(0) {
-	ShaderProgramSource source = ParseShader(filepath);
-	mRendererID = CreateShader(source.VertexSource, source.FragmentSource);
+	auto [vertexSource, fragmentSource] = ParseShader(filepath);
+	mRendererID = CreateShader(vertexSource, fragmentSource);
 }
 
 Shader::~Shader() {
 	GLCall(glDeleteProgram(mRendererID));
 }
 
-ShaderProgramSource Shader::ParseShader(const std::string& filepath) {
+void Shader::Bind() const {
+	GLCall(glUseProgram(mRendererID));
+}
+
+void Shader::Unbind() const {
+	GLCall(glUseProgram(0));
+}
+
+void Shader::SetUniform1i(const std::string& name, GLint value) {
+	GLCall(glUniform1i(GetUniformLocation(name), value));
+}
+
+void Shader::SetUniform1f(const std::string& name, GLfloat value) {
+	GLCall(glUniform1f(GetUniformLocation(name), value));
+}
+
+void Shader::SetUniform4f(const std::string& name, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3) {
+	GLCall(glUniform4f(GetUniformLocation(name), v0, v1, v2, v3));
+}
+
+void Shader::SetUniformMat4f(const std::string& name, const glm::mat4& matrix) {
+	GLCall(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]));
+}
+
+std::pair<std::string, std::string> Shader::ParseShader(const std::string& filepath) {
+	// open file specified by 'filepath', parse the content and return two strings
+	// containing vertex shader and fragment shader source code
 	std::ifstream stream(filepath);
 
 	enum class ShaderType { NONE = -1, VERTEX = 0, FRAGMENT = 1 };
@@ -33,21 +59,49 @@ ShaderProgramSource Shader::ParseShader(const std::string& filepath) {
 			else if (line.find("fragment") != std::string::npos)
 				type = ShaderType::FRAGMENT;
 		}
-
-		// store shader code
+		// shader code
 		else
-			// add also a newline character at the end of each line
+			// store shader code with newline character at the end of each line
 			ss[(int)type] << line << '\n';
 	}
 
-	return {ss[0].str(), ss[1].str()};
+	return std::pair<std::string, std::string>(ss[0].str(), ss[1].str());
 }
 
-unsigned int Shader::CreateShader(const std::string& vertexShader, const std::string& fragmentShader) {
-	GLCall(unsigned int program = glCreateProgram());
-	unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
-	unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
+GLuint Shader::CompileShader(GLenum type, const std::string& source) {
+	// create shader and compile it. If compilation succed returns a non-zero ID
+	GLCall(GLuint id = glCreateShader(type));
+	const GLchar* src = source.c_str();
+	GLCall(glShaderSource(id, 1, &src, nullptr));
+	GLCall(glCompileShader(id));
 
+	// check if compilation errors occured
+	GLint result;
+	GLCall(glGetShaderiv(id, GL_COMPILE_STATUS, &result));
+	if (result == GL_FALSE) {
+		GLint length;
+		GLCall(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length));
+		// allocate message on the stack but dynamically
+		GLchar* message = (GLchar*)alloca(length * sizeof(GLchar));
+		GLCall(glGetShaderInfoLog(id, length, &length, message));
+		std::cout << "Failed to compile " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment")
+		          << std::endl;
+		std::cout << message << std::endl;
+		GLCall(glDeleteShader(id));
+
+		return 0;
+	}
+
+	return id;
+}
+
+GLuint Shader::CreateShader(const std::string& vertex, const std::string& fragment) {
+	// create program and compile both vertex and fragment shader
+	GLCall(GLuint program = glCreateProgram());
+	unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertex);
+	unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragment);
+
+	// combine the two shaders in one single program
 	GLCall(glAttachShader(program, vs));
 	GLCall(glAttachShader(program, fs));
 	GLCall(glLinkProgram(program));
@@ -59,74 +113,14 @@ unsigned int Shader::CreateShader(const std::string& vertexShader, const std::st
 	return program;
 }
 
-unsigned int Shader::CompileShader(unsigned int type, const std::string& source) {
-	GLCall(unsigned int id = glCreateShader(type));
-	const char* src = source.c_str();
-	GLCall(glShaderSource(id, 1, &src, nullptr));
-	GLCall(glCompileShader(id));
-
-	int result;
-	GLCall(glGetShaderiv(id, GL_COMPILE_STATUS, &result));
-	if (result == GL_FALSE) {
-		int length;
-		GLCall(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length));
-		// allocate message on the stack but dynamically (?)
-		char* message = (char*)alloca(length * sizeof(char));
-		GLCall(glGetShaderInfoLog(id, length, &length, message));
-		std::cout << "Failed to compile " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << std::endl;
-		std::cout << message << std::endl;
-		GLCall(glDeleteShader(id));
-
-		return 0;
-	}
-
-	return id;
-}
-
-void Shader::Bind() const {
-	GLCall(glUseProgram(mRendererID));
-}
-
-void Shader::Unbind() const {
-	GLCall(glUseProgram(0));
-}
-
-void Shader::SetUniform1i(const std::string& name, int value) {
-	GLCall(glUniform1i(GetUniformLocation(name), value));
-}
-
-void Shader::SetUniform1f(const std::string& name, float value) {
-	GLCall(glUniform1f(GetUniformLocation(name), value));
-}
-
-void Shader::SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3) {
-	GLCall(glUniform4f(GetUniformLocation(name), v0, v1, v2, v3));
-}
-
-void Shader::SetUniformMat4f(const std::string& name, const glm::mat4& matrix) {
-	GLCall(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]));
-}
-
-int Shader::GetUniformLocation(const std::string& name) {
+GLint Shader::GetUniformLocation(const std::string& name) {
 	if (mUniformLocationCache.find(name) != mUniformLocationCache.end())
 		return mUniformLocationCache[name];
 
-	GLCall(int location = glGetUniformLocation(mRendererID, name.c_str()));
+	GLCall(GLint location = glGetUniformLocation(mRendererID, name.c_str()));
 	if (location == -1)
 		std::cout << "Warning: uniform '" << name << "' does not exist!" << std::endl;
 	mUniformLocationCache[name] = location;
 
 	return location;
-}
-
-void Shader::GetActiveUniform() const {
-	int nUniforms;
-	GLCall(glGetProgramiv(mRendererID, GL_ACTIVE_UNIFORMS, &nUniforms));
-	for (int i = 0; i < nUniforms; i++) {
-		char name[256];
-		int length, size;
-		GLenum type;
-		GLCall(glGetActiveUniform(mRendererID, i, sizeof(name), &length, &size, &type, name));
-		std::cout << "Uniform #" << i << ": " << name << std::endl;
-	}
 }

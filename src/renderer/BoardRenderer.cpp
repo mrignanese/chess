@@ -1,8 +1,10 @@
 #include "renderer/BoardRenderer.h"
 
 #include "game/InitialPosition.h"
+#include "renderer/Renderer.h"
 
-BoardRenderer::BoardRenderer(const std::shared_ptr<Window>& window, const std::shared_ptr<Mouse>& mouse)
+BoardRenderer::BoardRenderer(const std::shared_ptr<Window>& window,
+                             const std::shared_ptr<Mouse>& mouse)
     : mWindow(window),
       mMouse(mouse),
       mPositions{
@@ -26,7 +28,8 @@ BoardRenderer::BoardRenderer(const std::shared_ptr<Window>& window, const std::s
 	mSquareShader.Bind();
 	mPieceShader.Bind();
 
-	mProj = glm::ortho(0.0f, (float)window->GetFBWidth(), 0.0f, (float)window->GetFBHeight(), -1.0f, 1.0f);
+	mProj = glm::ortho(0.0f, (float)window->GetFBWidth(), 0.0f, (float)window->GetFBHeight(), -1.0f,
+	                   1.0f);
 	mView = glm::mat4(1.0f);
 	mModel = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	mMVP = mProj * mView * mModel;
@@ -97,7 +100,7 @@ void BoardRenderer::DrawSquare(int row, int col) {
 std::pair<int, int> BoardRenderer::GetCoordinatesFromSquareName(const std::string& name) const {
 	// Offset col and row so that 'a1' square is (0,0)
 	int row = std::atoi(&name[1]) - 1;  // Row 1 of chessboard is row 0
-	int col = name[0] - 'a';  			// Column 'a' is column 0
+	int col = name[0] - 'a';            // Column 'a' is column 0
 	return std::pair<int, int>(col, row);
 }
 

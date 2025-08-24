@@ -8,7 +8,7 @@ SRC = $(wildcard src/*.cpp src/renderer/*.cpp dependecies/stb_image/stb_image.cp
 BIN = build/application
 
 # pre compiled header
-PCH = include/GL_pch.h
+PCH = include/GLpch.h
 PCH_GCH = $(PCH).gch
 
 #$(PCH_GCH): $(PCH)
@@ -19,4 +19,4 @@ $(BIN): $(SRC)
 
 clean:
 	rm -f $(BIN)
-	rm -f include/GL_pch.h.gch
+	rm -f include/GLpch.h.gch

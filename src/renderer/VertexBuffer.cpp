@@ -1,8 +1,10 @@
 #include "renderer/VertexBuffer.h"
 
-#include "renderer/Renderer.h"
+#include "renderer/GLError.h"
 
-VertexBuffer::VertexBuffer(const void* data, unsigned int size) {
+VertexBuffer::VertexBuffer(const GLvoid* data, GLsizeiptr size) {
+	// creates new VBO with 'data' and given 'size' in bytes.
+	// Target: GL_ARRAY_BUFFER
 	GLCall(glGenBuffers(1, &mRendererID));
 	GLCall(glBindBuffer(GL_ARRAY_BUFFER, mRendererID));
 	GLCall(glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW));

@@ -1,13 +1,18 @@
 #pragma once
 
-class VertexBuffer {
-   private:
-	unsigned int mRendererID;
+#include "GLpch.h"
 
+class VertexBuffer {
    public:
-	VertexBuffer(const void* data, unsigned int size);
+	VertexBuffer(const GLvoid* data, GLsizeiptr size);
+	VertexBuffer(const VertexBuffer&) = delete;
 	~VertexBuffer();
+
+	VertexBuffer& operator=(const VertexBuffer&) = delete;
 
 	void Bind() const;
 	void Unbind() const;
+
+   private:
+	GLuint mRendererID;
 };

@@ -1,5 +1,6 @@
 #include "renderer/Texture.h"
 
+#include "renderer/GLError.h"
 #include "stb_image/stb_image.h"
 
 Texture::Texture(const std::string& path)
@@ -12,15 +13,18 @@ Texture::Texture(const std::string& path)
 	GLCall(glGenTextures(1, &mRendererID));
 	GLCall(glBindTexture(GL_TEXTURE_2D, mRendererID));
 
+	// filtering: specify how texture should be displayed when minified or magnified
+	// respect to its actual size
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+
+	// wrapping 
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
 
 	// send png buffer to OpenGL (graphics card)
 	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, mWidth, mHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-	                    mLocalBuffer));
-	GLCall(glBindTexture(GL_TEXTURE_2D, 0));
+	                    (const GLvoid*)mLocalBuffer));
 
 	if (mLocalBuffer)
 		stbi_image_free(mLocalBuffer);
@@ -39,10 +43,10 @@ void Texture::Unbind() const {
 	GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 }
 
-int Texture::GetWidth() const {
+GLsizei Texture::GetWidth() const {
 	return mWidth;
 }
 
-int Texture::GetHeight() const {
+GLsizei Texture::GetHeight() const {
 	return mHeight;
 }

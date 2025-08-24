@@ -6,7 +6,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "GL_pch.h"
+#include "GLpch.h"
 #include "core/Mouse.h"
 #include "core/Window.h"
 #include "renderer/IndexBuffer.h"

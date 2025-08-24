@@ -1,41 +1,35 @@
 #pragma once
 
-#include <glm/glm.hpp>
 #include <string>
 #include <unordered_map>
 
-struct ShaderProgramSource {
-	std::string VertexSource;
-	std::string FragmentSource;
-};
+#include "GLpch.h"
 
 class Shader {
-   private:
-	std::string mFilePath;
-	unsigned int mRendererID;
-	std::unordered_map<std::string, int> mUniformLocationCache;
-
    public:
 	Shader(const std::string& filepath);
+	Shader(const Shader&) = delete;
 	~Shader();
 
 	void Bind() const;
 	void Unbind() const;
 
-	// set uniforms
-	void SetUniform1i(const std::string& name, int value);
-	void SetUniform1f(const std::string& name, float value);
-	void SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
+	// methods to set uniforms
+	void SetUniform1i(const std::string& name, GLint value);
+	void SetUniform1f(const std::string& name, GLfloat value);
+	void SetUniform4f(const std::string& name, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3);
 	void SetUniformMat4f(const std::string& name, const glm::mat4& matrix);
 
-	void GetActiveUniform() const;
+	Shader& operator=(const Shader&) = delete;
 
    private:
-	ShaderProgramSource ParseShader(const std::string& filepath);
-	unsigned int CompileShader(unsigned int type, const std::string& source);
-	unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
+	std::pair<std::string, std::string> ParseShader(const std::string& filepath);
+	GLuint CompileShader(GLenum type, const std::string& source);
+	GLuint CreateShader(const std::string& vertex, const std::string& fragment);
 
-	int GetUniformLocation(const std::string& name);
+	GLint GetUniformLocation(const std::string& name);
 
-	friend class BoardRenderer;
+	std::string mFilePath;
+	GLuint mRendererID;
+	std::unordered_map<std::string, int> mUniformLocationCache;
 };

@@ -1,13 +1,13 @@
 #include "renderer/IndexBuffer.h"
 
-#include "renderer/Renderer.h"
+#include "renderer/GLError.h"
 
-IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count) : mCount(count) {
-	ASSERT(sizeof(unsigned int) == sizeof(GLuint));
-
+IndexBuffer::IndexBuffer(const GLvoid* data, unsigned int count) : mCount(count) {
+	// creates new IBO with 'data' and given count (number of elements).
+	// Target: GL_ELEMENT_ARRAY_BUFFER
 	GLCall(glGenBuffers(1, &mRendererID));
 	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mRendererID));
-	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), data, GL_STATIC_DRAW));
+	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(GLuint), data, GL_STATIC_DRAW));
 }
 
 IndexBuffer::~IndexBuffer() {

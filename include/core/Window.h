@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GL_pch.h"
+#include "GLpch.h"
 
 class Window {
    private:
