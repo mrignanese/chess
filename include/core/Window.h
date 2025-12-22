@@ -3,11 +3,6 @@
 #include "GLpch.h"
 
 class Window {
-   private:
-	int mWidth, mHeight;
-	int mFbWidth, mFbHeight;
-	GLFWwindow* mWindow;
-
    public:
 	Window(int width, int height, const char* title, GLFWmonitor* monitor = nullptr,
 	       GLFWwindow* share = nullptr);
@@ -18,13 +13,19 @@ class Window {
 	int ShouldClose() const;
 	void SwapBuffers() const;
 	void PollEvents() const;
-	void OnResize();
 
 	Window& operator=(const Window&) = delete;
 
 	int GetWidth() const;
 	int GetHeight() const;
-	int GetFBWidth() const;
-	int GetFBHeight() const;
+	GLsizei GetFrameBufferWidth() const;
+	GLsizei GetFrameBufferHeight() const;
 	GLFWwindow* GetWindow() const;
+
+   private:
+	int mWidth, mHeight;
+	GLsizei mFBWidth, mFBHeight;
+	GLFWwindow* mWindow;
+
+	static void FramebufferSizeCallback(GLFWwindow* win, int width, int height);
 };

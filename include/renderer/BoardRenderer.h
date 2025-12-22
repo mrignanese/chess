@@ -21,7 +21,6 @@ class BoardRenderer {
 	enum class SquareColor { DARK, LIGHT };
 
 	std::shared_ptr<Window> mWindow;
-	std::shared_ptr<Mouse> mMouse;
 	float mPositions[16];      // array containing vertex 2D coordinates and texture 2D coordinates
 	unsigned int mIndices[6];  // indices to access mPositions elements
 
@@ -35,7 +34,7 @@ class BoardRenderer {
 	std::unordered_map<std::string, std::shared_ptr<Texture>> mPieceTextures;
 
    public:
-	BoardRenderer(const std::shared_ptr<Window>& window, const std::shared_ptr<Mouse>& mouse);
+	BoardRenderer(const std::shared_ptr<Window>& window);
 	BoardRenderer(const BoardRenderer&) = delete;
 	~BoardRenderer() = default;
 

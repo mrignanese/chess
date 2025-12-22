@@ -3,10 +3,8 @@
 #include "game/InitialPosition.h"
 #include "renderer/Renderer.h"
 
-BoardRenderer::BoardRenderer(const std::shared_ptr<Window>& window,
-                             const std::shared_ptr<Mouse>& mouse)
+BoardRenderer::BoardRenderer(const std::shared_ptr<Window>& window)
     : mWindow(window),
-      mMouse(mouse),
       mPositions{
           0.0f, 0.0f, 0.0f, 0.0f,  // bottom-left corner
           1.0f, 0.0f, 1.0f, 0.0f,  // bottom-right corner
@@ -28,13 +26,13 @@ BoardRenderer::BoardRenderer(const std::shared_ptr<Window>& window,
 	mSquareShader.Bind();
 	mPieceShader.Bind();
 
-	mProj = glm::ortho(0.0f, (float)window->GetFBWidth(), 0.0f, (float)window->GetFBHeight(), -1.0f,
-	                   1.0f);
+	mProj = glm::ortho(0.0f, (float)window->GetFrameBufferWidth(), 0.0f,
+	                   (float)window->GetFrameBufferHeight(), -1.0f, 1.0f);
 	mView = glm::mat4(1.0f);
 	mModel = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	mMVP = mProj * mView * mModel;
 
-	mSquareSize = static_cast<float>(window->GetFBHeight() / 8);
+	mSquareSize = static_cast<float>(window->GetFrameBufferHeight() / 8);
 
 	// consider all png files that are used to draw pieces and load textures
 	std::filesystem::path pieceTexturesPath = "resources/textures/pieces";

@@ -15,7 +15,7 @@ int main() {
 		return -1;
 
 	std::shared_ptr<Window> window = std::make_shared<Window>(1920, 1200, "Chess", nullptr, nullptr);
-	std::shared_ptr<Mouse> mouse = std::make_shared<Mouse>(window, GLFW_ARROW_CURSOR);
+	Mouse::Init(window, GLFW_ARROW_CURSOR);
 
 	if (!window->IsOpen()) {
 		std::cout << "Failed to open the window!" << std::endl;
@@ -24,7 +24,7 @@ int main() {
 
 	Renderer::EnableBlending();
 
-	BoardRenderer board(window, mouse);
+	BoardRenderer board(window);
 
 	ImGui::CreateContext();
 	ImGui_ImplGlfw_InitForOpenGL(window->GetWindow(), true);
