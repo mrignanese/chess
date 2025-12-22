@@ -9,6 +9,7 @@ build/*
 
 # PCH
 *.pch
+*.gch
 
 # notes
 *.txt
