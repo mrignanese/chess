@@ -1,31 +1,44 @@
+########################################
+### Basic Makefile concepts to know: ###
+# 
+# A Makefile rule looks like this -->
+# target: dependencies
+#	commands
+#
+# $@ refers to the target
+# $^ refers to all dependencies
+# $< refers to the first dependency
+########################################
+
 CXX = g++
-CXXFLAGS = -Wall -g -O0 -std=c++20
+CXX_FLAGS = -Wall -g -O0 -std=c++20
+BUILD_DIR = ./build
+
 INCLUDE = $(shell pkg-config --cflags glfw3 glew glm) -Iinclude/ -Idependecies/
-LDFLAGS = $(shell pkg-config --static --libs glfw3 glew) -lGL
+LD_FLAGS = $(shell pkg-config --static --libs glfw3 glew) -lGL
 
 SRC = $(wildcard src/*.cpp src/renderer/*.cpp dependecies/stb_image/stb_image.cpp \
-                dependecies/imgui/*.cpp src/core/*.cpp src/game/*.cpp)
+        dependecies/imgui/*.cpp src/core/*.cpp src/game/*.cpp)
 
-# objects go to build/
-OBJ = $(patsubst %.cpp, build/%.o, $(SRC))
+# consider each .cpp file, and create corresponding .o file in build/
+OBJ = $(patsubst %.cpp, $(BUILD_DIR)/%.o, $(SRC))
+BIN = $(BUILD_DIR)/chess
 
-BIN = build/application
-
-PCH = include/GLpch.h
-PCH_GCH = build/GLpch.h.gch
-
-# link step
+# default rule: build the binary
 $(BIN): $(OBJ)
-	$(CXX) $(CXXFLAGS) $(INCLUDE) $^ -o $@ $(LDFLAGS)
+	$(CXX) $(CXX_FLAGS) $(INCLUDE) $^ -o $@ $(LD_FLAGS)
 
-build/%.o: %.cpp $(PCH_GCH)
+# rule to compile a single .cpp to .o
+$(BUILD_DIR)/%.o: %.cpp
 	@mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+	$(CXX) $(CXX_FLAGS) $(INCLUDE) -c $^ -o $@
 
-# precompiled header
-$(PCH_GCH): $(PCH)
-	@mkdir -p build
-	$(CXX) $(CXXFLAGS) -x c++-header $(INCLUDE) $< -o $@
+# convenience rule to build .o files in current directory
+%.o: $(BUILD_DIR)/%.o
+	@true
 
 clean:
-	rm -rf build
+	@find . -name "*.o" -delete
+	@rm -f $(BIN)
+	@rm -rf $(BUILD_DIR)
+	@echo "Cleaned build files."
