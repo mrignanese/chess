@@ -4,8 +4,6 @@
 #include "Shader.h"
 #include "VertexArray.h"
 
-
-
 class Renderer {
    public:
 	Renderer(const Renderer&) = delete;
@@ -21,7 +19,7 @@ class Renderer {
 		return Get().DrawImpl(va, ib, shader);
 	}
 
-	static void EnableBlending() {
+	inline static void EnableBlending() {
 		return Get().EnableBlendingImpl();
 	}
 

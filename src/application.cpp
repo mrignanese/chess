@@ -16,11 +16,11 @@ int main() {
 	if (!glfwInit())
 		return -1;
 
-	std::shared_ptr<Window> window =
-	    std::make_shared<Window>(1920, 1200, "Chess", nullptr, nullptr);
-	Mouse::Init(window, GLFW_ARROW_CURSOR);
+	Window window(1920, 1200, "Chess", nullptr, nullptr); 
+	// = std::make_shared<Window>(1920, 1200, "Chess", nullptr, nullptr);
+	//Mouse::Init(window, GLFW_ARROW_CURSOR);
 
-	if (!window->IsOpen()) {
+	if (!window.IsOpen()) {
 		std::cout << "Failed to open the window!" << std::endl;
 		return -1;
 	}
@@ -30,7 +30,7 @@ int main() {
 	BoardRenderer board(window);
 
 	ImGui::CreateContext();
-	ImGui_ImplGlfw_InitForOpenGL(window->GetWindow(), true);
+	ImGui_ImplGlfw_InitForOpenGL(window.GetWindow(), true);
 	ImGui_ImplOpenGL3_Init("#version 330");
 	ImGui::StyleColorsDark();
 
@@ -38,7 +38,7 @@ int main() {
 	io.IniFilename = "../build/imgui.ini";
 
 	// window loop for rendering
-	while (!window->ShouldClose()) {
+	while (!window.ShouldClose()) {
 		Renderer::Clear();
 
 		ImGui_ImplGlfw_NewFrame();
@@ -59,8 +59,8 @@ int main() {
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-		window->SwapBuffers();
-		window->PollEvents();
+		window.SwapBuffers();
+		window.PollEvents();
 	}
 
 	ImGui_ImplGlfw_Shutdown();
