@@ -1,16 +1,18 @@
 #pragma once
 
+#include <GL/glew.h>
+
+#include <cstdint>
 #include <vector>
 
 #include "GLError.h"
-#include "GLpch.h"
 
 struct VertexBufferElement {
-	GLenum type;
-	GLuint count;
-	GLboolean normalized;
+	GLenum type;			// element data type (e.g, GL_FLOAT, GL_UNSIGNED_INT, etc.)
+	GLuint count;			// how many elements of the specified type
+	GLboolean normalized;	// true only for GL_UNSIGNED_BYTE
 
-	static unsigned int GetSizeOfType(unsigned int type) {
+	static uint32_t GetSizeOfType(uint32_t type) {
 		switch (type) {
 			case GL_FLOAT:
 				return 4;
@@ -25,14 +27,6 @@ struct VertexBufferElement {
 	}
 };
 
-/*
-VertexBufferLayout class:
-manages the description of vertex attributes in a vertex buffer.
-For example:
-    - first attribute: vertex positions (2 floats)
-    - second attribute: texture coordinates (2 floats).
-*/
-
 class VertexBufferLayout {
    public:
 	VertexBufferLayout() : mStride(0) {};
@@ -40,7 +34,7 @@ class VertexBufferLayout {
 	~VertexBufferLayout() = default;
 
 	template <typename T>
-	void Push(unsigned int count);
+	void Push(uint32_t count);
 
 	VertexBufferLayout& operator=(const VertexBufferLayout&) = delete;
 
@@ -54,24 +48,24 @@ class VertexBufferLayout {
 
    private:
 	std::vector<VertexBufferElement> mElements;
-	GLsizei mStride; // distance in bytes between two elements (vertices) of the VBO
+	GLsizei mStride;  // distance in bytes between two elements (vertices) of the VBO
 };
 
 // template specializations of Push for float, unsigned int and unsigned char types
 template <>
-inline void VertexBufferLayout::Push<float>(unsigned int count) {
+inline void VertexBufferLayout::Push<float>(uint32_t count) {
 	mElements.push_back({GL_FLOAT, count, GL_FALSE});
 	mStride += count * VertexBufferElement::GetSizeOfType(GL_FLOAT);
 }
 
 template <>
-inline void VertexBufferLayout::Push<unsigned int>(unsigned int count) {
+inline void VertexBufferLayout::Push<uint32_t>(uint32_t count) {
 	mElements.push_back({GL_UNSIGNED_INT, count, GL_FALSE});
 	mStride += count * VertexBufferElement::GetSizeOfType(GL_UNSIGNED_INT);
 }
 
 template <>
-inline void VertexBufferLayout::Push<unsigned char>(unsigned int count) {
+inline void VertexBufferLayout::Push<u_char>(uint32_t count) {
 	mElements.push_back({GL_UNSIGNED_BYTE, count, GL_TRUE});
 	mStride += count * VertexBufferElement::GetSizeOfType(GL_UNSIGNED_BYTE);
 }

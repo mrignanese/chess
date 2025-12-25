@@ -3,8 +3,8 @@
 #include "renderer/GLError.h"
 #include "stb_image/stb_image.h"
 
-Texture::Texture(const std::string& path)
-    : mRendererID(0), mFilePath(path), mLocalBuffer(nullptr), mWidth(0), mHeight(0), mBPP(0) {
+Texture::Texture(const std::string& path) :
+    mRendererID(0), mFilePath(path), mLocalBuffer(nullptr), mWidth(0), mHeight(0), mBPP(0) {
 	// enable this flag because png files are loaded considering the origin
 	// as the top left corner, while OpenGL loads textures starting from the bottom left one
 	stbi_set_flip_vertically_on_load(1);
@@ -14,11 +14,11 @@ Texture::Texture(const std::string& path)
 	GLCall(glBindTexture(GL_TEXTURE_2D, mRendererID));
 
 	// filtering: specify how texture should be displayed when minified or magnified
-	// respect to its actual size
+	// respect to its actual size. Here linear minification and magnification are set
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
 
-	// wrapping 
+	// wrapping
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
 	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
 
@@ -34,7 +34,7 @@ Texture::~Texture() {
 	GLCall(glDeleteTextures(1, &mRendererID));
 }
 
-void Texture::Bind(unsigned int slot) const {
+void Texture::Bind(uint32_t slot) const {
 	GLCall(glActiveTexture(GL_TEXTURE0 + slot));
 	GLCall(glBindTexture(GL_TEXTURE_2D, mRendererID));
 }

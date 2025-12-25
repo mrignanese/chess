@@ -1,10 +1,12 @@
 #pragma once
 
-#include "GLpch.h"
+#include <GL/glew.h>
+
+#include <cstdint>
 
 class IndexBuffer {
    public:
-	IndexBuffer(const GLvoid* data, unsigned int count);
+	IndexBuffer(const GLvoid* data, uint32_t count);
 	IndexBuffer(const IndexBuffer&) = delete;
 	~IndexBuffer();
 
@@ -13,9 +15,9 @@ class IndexBuffer {
 
 	IndexBuffer& operator=(const IndexBuffer&) = delete;
 
-	unsigned int GetCount() const;
+	uint32_t GetCount() const;
 
    private:
 	GLuint mRendererID;
-	unsigned int mCount;
+	uint32_t mCount;
 };

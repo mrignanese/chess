@@ -1,7 +1,9 @@
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+
 #include <iostream>
 #include <memory>
 
-#include "GLpch.h"
 #include "core/Mouse.h"
 #include "core/Window.h"
 #include "imgui/imgui.h"
@@ -14,7 +16,8 @@ int main() {
 	if (!glfwInit())
 		return -1;
 
-	std::shared_ptr<Window> window = std::make_shared<Window>(1920, 1200, "Chess", nullptr, nullptr);
+	std::shared_ptr<Window> window =
+	    std::make_shared<Window>(1920, 1200, "Chess", nullptr, nullptr);
 	Mouse::Init(window, GLFW_ARROW_CURSOR);
 
 	if (!window->IsOpen()) {
@@ -48,8 +51,8 @@ int main() {
 		{
 		    ImGui::SliderFloat3("Translation A", &translationA.x, 0.0f, (float)window->GetWidth());
 		    ImGui::SliderFloat3("Translation B", &translationB.x, 0.0f, (float)window->GetWidth());
-		    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate,
-		    ImGui::GetIO().Framerate);
+		    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f /
+		ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		}
 		*/
 

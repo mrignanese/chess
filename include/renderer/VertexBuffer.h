@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GLpch.h"
+#include <GL/glew.h>
 
 class VertexBuffer {
    public:
@@ -8,10 +8,10 @@ class VertexBuffer {
 	VertexBuffer(const VertexBuffer&) = delete;
 	~VertexBuffer();
 
-	VertexBuffer& operator=(const VertexBuffer&) = delete;
-
 	void Bind() const;
 	void Unbind() const;
+
+	VertexBuffer& operator=(const VertexBuffer&) = delete;
 
    private:
 	GLuint mRendererID;

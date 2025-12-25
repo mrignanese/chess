@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "GLpch.h"
+#include <GLFW/glfw3.h>
 #include "core/Window.h"
 
 class Mouse {

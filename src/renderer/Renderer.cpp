@@ -1,5 +1,7 @@
 #include "renderer/Renderer.h"
 
+#include <GL/glew.h>
+
 #include <iostream>
 
 #include "renderer/GLError.h"

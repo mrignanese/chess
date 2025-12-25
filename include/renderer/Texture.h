@@ -1,8 +1,8 @@
 #pragma once
 
-#include <string>
+#include <GL/glew.h>
 
-#include "GLpch.h"
+#include <string>
 
 class Texture {
    public:
@@ -10,7 +10,7 @@ class Texture {
 	Texture(const Texture&) = delete;
 	~Texture();
 
-	void Bind(unsigned int slot = 0) const;
+	void Bind(uint32_t slot = 0) const;
 	void Unbind() const;
 
 	Texture& operator=(const Texture&) = delete;
@@ -21,6 +21,6 @@ class Texture {
    private:
 	GLuint mRendererID;
 	std::string mFilePath;
-	unsigned char* mLocalBuffer;  // buffer to store the image
+	u_char* mLocalBuffer;  // buffer to store the image
 	GLsizei mWidth, mHeight, mBPP;
 };

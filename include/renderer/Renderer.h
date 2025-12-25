@@ -1,6 +1,5 @@
 #pragma once
 
-#include "GLpch.h"
 #include "IndexBuffer.h"
 #include "Shader.h"
 #include "VertexArray.h"

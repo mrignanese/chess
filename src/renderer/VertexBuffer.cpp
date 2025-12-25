@@ -3,7 +3,7 @@
 #include "renderer/GLError.h"
 
 VertexBuffer::VertexBuffer(const GLvoid* data, GLsizeiptr size) {
-	// creates new VBO with 'data' and given 'size' in bytes.
+	// creates new VBO with <data> and given <size> in bytes.
 	// Target: GL_ARRAY_BUFFER
 	GLCall(glGenBuffers(1, &mRendererID));
 	GLCall(glBindBuffer(GL_ARRAY_BUFFER, mRendererID));

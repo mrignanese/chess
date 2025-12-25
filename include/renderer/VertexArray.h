@@ -1,8 +1,8 @@
 #pragma once
 
-#include "GLpch.h"
-#include "VertexBuffer.h"
+#include <GL/glew.h>
 
+class VertexBuffer;
 class VertexBufferLayout;
 
 class VertexArray {

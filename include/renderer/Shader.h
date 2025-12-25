@@ -1,9 +1,10 @@
 #pragma once
 
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+
 #include <string>
 #include <unordered_map>
-
-#include "GLpch.h"
 
 class Shader {
    public:
@@ -31,5 +32,5 @@ class Shader {
 
 	std::string mFilePath;
 	GLuint mRendererID;
-	std::unordered_map<std::string, int> mUniformLocationCache;
+	std::unordered_map<std::string, GLint> mUniformLocationCache;
 };

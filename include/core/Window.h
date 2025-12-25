@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GLpch.h"
+#include <GLFW/glfw3.h>
 
 class Window {
    public:

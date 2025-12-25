@@ -1,9 +1,9 @@
 #pragma once
 
+#include <GL/glew.h>
+
 #include <signal.h>
 #include <string>
-
-#include "GLpch.h"
 
 #define ASSERT(x) \
 	if (!(x))     \

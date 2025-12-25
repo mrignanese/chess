@@ -6,8 +6,8 @@
 
 #include "renderer/GLError.h"
 
-Shader::Shader(const std::string& filepath) : mFilePath(filepath), mRendererID(0) {
-	auto [vertexSource, fragmentSource] = ParseShader(filepath);
+Shader::Shader(const std::string& filepath) : mFilePath(filepath) {
+	const auto& [vertexSource, fragmentSource] = ParseShader(filepath);
 	mRendererID = CreateShader(vertexSource, fragmentSource);
 }
 
@@ -40,7 +40,7 @@ void Shader::SetUniformMat4f(const std::string& name, const glm::mat4& matrix) {
 }
 
 std::pair<std::string, std::string> Shader::ParseShader(const std::string& filepath) {
-	// open file specified by 'filepath', parse the content and return two strings
+	// open file specified by <filepath>, parse the content and return two strings
 	// containing vertex shader and fragment shader source code
 	std::ifstream stream(filepath);
 
@@ -65,17 +65,18 @@ std::pair<std::string, std::string> Shader::ParseShader(const std::string& filep
 			ss[(int)type] << line << '\n';
 	}
 
-	return std::pair<std::string, std::string>(ss[0].str(), ss[1].str());
+	return {ss[0].str(), ss[1].str()};
 }
 
 GLuint Shader::CompileShader(GLenum type, const std::string& source) {
 	// create shader and compile it. If compilation succed returns a non-zero ID
-	GLCall(GLuint id = glCreateShader(type));
+	GLCall(GLuint id = glCreateShader(type));  // create shader
 	const GLchar* src = source.c_str();
-	GLCall(glShaderSource(id, 1, &src, nullptr));
-	GLCall(glCompileShader(id));
+	GLCall(glShaderSource(id, 1, &src, nullptr));  // set shader source code
+	GLCall(glCompileShader(id));                   // compile shader
 
-	// check if compilation errors occured
+	// check if compilation errors occured. If compilation failed,
+	// display error message
 	GLint result;
 	GLCall(glGetShaderiv(id, GL_COMPILE_STATUS, &result));
 	if (result == GL_FALSE) {
@@ -96,10 +97,10 @@ GLuint Shader::CompileShader(GLenum type, const std::string& source) {
 }
 
 GLuint Shader::CreateShader(const std::string& vertex, const std::string& fragment) {
-	// create program and compile both vertex and fragment shader
+	// create program (the shader ID) and compile both vertex and fragment shader
 	GLCall(GLuint program = glCreateProgram());
-	unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertex);
-	unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragment);
+	GLuint vs = CompileShader(GL_VERTEX_SHADER, vertex);
+	GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fragment);
 
 	// combine the two shaders in one single program
 	GLCall(glAttachShader(program, vs));
@@ -114,12 +115,16 @@ GLuint Shader::CreateShader(const std::string& vertex, const std::string& fragme
 }
 
 GLint Shader::GetUniformLocation(const std::string& name) {
+	// check if the uniform location was already queried and cached
 	if (mUniformLocationCache.find(name) != mUniformLocationCache.end())
 		return mUniformLocationCache[name];
 
+	// query OpenGL for the uniform location in the shader program
 	GLCall(GLint location = glGetUniformLocation(mRendererID, name.c_str()));
 	if (location == -1)
 		std::cout << "Warning: uniform '" << name << "' does not exist!" << std::endl;
+
+	// cache the result (including -1) to avoid repeated OpenGL calls
 	mUniformLocationCache[name] = location;
 
 	return location;

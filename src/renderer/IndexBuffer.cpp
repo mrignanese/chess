@@ -2,8 +2,8 @@
 
 #include "renderer/GLError.h"
 
-IndexBuffer::IndexBuffer(const GLvoid* data, unsigned int count) : mCount(count) {
-	// creates new IBO with 'data' and given count (number of elements).
+IndexBuffer::IndexBuffer(const GLvoid* data, uint32_t count) : mCount(count) {
+	// creates new IBO with <data> and given <count> (number of elements).
 	// Target: GL_ELEMENT_ARRAY_BUFFER
 	GLCall(glGenBuffers(1, &mRendererID));
 	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mRendererID));
@@ -22,6 +22,6 @@ void IndexBuffer::Unbind() const {
 	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 }
 
-unsigned int IndexBuffer::GetCount() const {
+uint32_t IndexBuffer::GetCount() const {
 	return mCount;
 }

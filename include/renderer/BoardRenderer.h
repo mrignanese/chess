@@ -1,12 +1,15 @@
 #pragma once
 
+#include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include <filesystem>
 #include <iostream>
 #include <memory>
 #include <string>
 #include <unordered_map>
 
-#include "GLpch.h"
 #include "core/Mouse.h"
 #include "core/Window.h"
 #include "renderer/IndexBuffer.h"
