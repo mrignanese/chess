@@ -2,8 +2,9 @@
 
 #include <iostream>
 
-Window::Window(int width, int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share)
-    : mWidth(width), mHeight(height), mFBWidth(0), mFBHeight(0), mWindow(nullptr) {
+Window::Window(int width, int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share) :
+    mWidth(width), mHeight(height), mFBWidth(0), mFBHeight(0), mWindow(nullptr) {
+	// set OpenGL version to 3.3 and use core profile
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -16,6 +17,8 @@ Window::Window(int width, int height, const char* title, GLFWmonitor* monitor, G
 
 	// make the window's context current
 	glfwMakeContextCurrent(mWindow);
+	// get actual pixel size of the framebuffer attached to the window.
+	// Frame buffer width and height are not equal to window width and height
 	glfwGetFramebufferSize(mWindow, &mFBWidth, &mFBHeight);
 	glViewport(0, 0, mFBWidth, mFBHeight);
 
@@ -63,7 +66,5 @@ GLFWwindow* Window::GetWindow() const {
 }
 
 void Window::FramebufferSizeCallback(GLFWwindow* win, int width, int height) {
-	//mFBWidth = width;
-	//mFBHeight = height;
 	glViewport(0, 0, width, height);
 }

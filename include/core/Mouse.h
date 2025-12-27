@@ -1,8 +1,7 @@
 #pragma once
 
-#include <memory>
-
 #include <GLFW/glfw3.h>
+
 #include "core/Window.h"
 
 class Mouse {
@@ -10,41 +9,50 @@ class Mouse {
 	Mouse(const Mouse&) = delete;
 	~Mouse();
 
-	static bool Init(const std::shared_ptr<Window>& window, int shape);
+	static bool Init(const Window& window, int shape);
 	static Mouse* Get();
 
-	static bool IsButtonPressed(int button) {
-		return Get()->IsButtonPressed(button);
+	inline static bool IsButtonPressed(const Window& win, int button) {
+		return Get()->IsButtonPressedImpl(win, button);
 	};
 
-	static bool IsInsideRegion(float x, float y, float width, float height) {
-		return Get()->IsInsideRegion(x, y, width, height);
+	inline static bool IsInsideRegion(float x, float y, float width, float height) {
+		return Get()->IsInsideRegionImpl(x, y, width, height);
 	};
 
-	static bool IsDragging(int button) {
-		return Get()->IsDragging(button);
+	inline static bool IsDragging(int button) {
+		return Get()->IsDraggingImpl(button);
 	};
 
 	Mouse& operator=(const Mouse&) = delete;
 
-	static inline const std::pair<float, float>& GetPosition() {
-		return sPosition;
+	static inline float GetX() {
+		return sX;
 	}
+
+	static inline float GetY() {
+		return sY;
+	}
+
 	static inline GLFWcursor* GetCursor() {
 		return sCursor;
 	}
 
    private:
-    static Mouse* sMouse;
-	static std::pair<float, float> sPosition;
+	Mouse(const Window& window, int shape);
+
+	static Mouse* sMouse;
+	static float sX, sY;
+	static int sButton;
 	static GLFWcursor* sCursor;
-	static std::shared_ptr<Window> sWindow;
 	static bool sInitialized;
 
-	Mouse(const std::shared_ptr<Window>& window, int shape);
-
 	// implementations of static methods
-	bool IsButtonPressedImpl(int button);
+	bool IsButtonPressedImpl(const Window& win, int button);
 	bool IsInsideRegionImpl(float x, float y, float width, float height);
 	bool IsDraggingImpl(int button);
+
+	// callbacks
+	static void CursorPositionCallback(GLFWwindow* win, double x, double y);
+	static void MouseButtonCallback(GLFWwindow* win, int button, int action, int mods);
 };

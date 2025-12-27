@@ -6,6 +6,7 @@
 
 #include "core/Mouse.h"
 #include "core/Window.h"
+#include "game//utilities/ChessCoordinates.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
@@ -16,9 +17,8 @@ int main() {
 	if (!glfwInit())
 		return -1;
 
-	Window window(1920, 1200, "Chess", nullptr, nullptr); 
-	// = std::make_shared<Window>(1920, 1200, "Chess", nullptr, nullptr);
-	//Mouse::Init(window, GLFW_ARROW_CURSOR);
+	Window window(1920, 1200, "Chess", nullptr, nullptr);
+	Mouse::Init(window, GLFW_ARROW_CURSOR);
 
 	if (!window.IsOpen()) {
 		std::cout << "Failed to open the window!" << std::endl;
@@ -47,6 +47,25 @@ int main() {
 
 		board.Draw();
 
+		if (Mouse::IsButtonPressed(window, GLFW_MOUSE_BUTTON_LEFT)) {
+			float size = window.GetFrameBufferHeight() / 8;
+			std::cout << "Left button pressed\n";
+			float x = Mouse::GetX();
+			float y = Mouse::GetY();
+			std::cout << "x = " << x << " " << "y = " << y << std::endl;
+
+			int row = y / size;
+			int col = x / size;
+			std::cout << "row = " << row << " " << "col = " << col << std::endl;
+			
+			std::string square = GetSquareNameFromCoordinates(row, col);
+			//char squareName[2];
+			//squareName[0] = col + 97;  // 97 is ASCII code for 'a' (first column)
+			//squareName[1] = row + 1;
+			//std::string square(squareName);
+			//std::cout << squareName[0] << " " << squareName[1] << std::endl;
+			std::cout << "Mouse is in square " << square << std::endl;
+		}
 		/*
 		{
 		    ImGui::SliderFloat3("Translation A", &translationA.x, 0.0f, (float)window->GetWidth());

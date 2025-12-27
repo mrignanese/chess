@@ -1,15 +1,19 @@
 #include "core/Mouse.h"
 
 Mouse* Mouse::sMouse = nullptr;
-std::pair<float, float> Mouse::sPosition = {};
+float Mouse::sX = 0.0f;
+float Mouse::sY = 0.0f;
+int Mouse::sButton = 0;
 GLFWcursor* Mouse::sCursor = nullptr;
-std::shared_ptr<Window> Mouse::sWindow = nullptr;
 bool Mouse::sInitialized = false;
 
-Mouse::Mouse(const std::shared_ptr<Window>& window, int shape) {
-	sPosition = std::make_pair(0.0f, 0.0f);
+Mouse::Mouse(const Window& window, int shape) {
 	sCursor = glfwCreateStandardCursor(shape);
-	sWindow = window;
+	glfwSetCursor(window.GetWindow(), sCursor);
+	
+	// set callback for mouse position and buttons status
+	glfwSetCursorPosCallback(window.GetWindow(), CursorPositionCallback);
+	glfwSetMouseButtonCallback(window.GetWindow(), MouseButtonCallback);
 }
 
 Mouse::~Mouse() {
@@ -17,24 +21,24 @@ Mouse::~Mouse() {
 	delete sMouse;
 }
 
-bool Mouse::Init(const std::shared_ptr<Window>& window, int shape) {
-  if(!sInitialized){
-    sMouse = new Mouse(window, shape); 
-    sInitialized = true;
-    return true;
-  }
-  else 
-    return false;
+bool Mouse::Init(const Window& window, int shape) {
+	if (!sInitialized) {
+		sMouse = new Mouse(window, shape);
+		sInitialized = true;
+		return true;
+	} else
+		return false;
 }
 
 Mouse* Mouse::Get() {
-	if(sInitialized)
+	if (sInitialized)
 		return sMouse;
 	return nullptr;
 }
 
-bool Mouse::IsButtonPressedImpl(int button) {
-	return glfwGetMouseButton(sWindow->GetWindow(), button);
+bool Mouse::IsButtonPressedImpl(const Window& win, int button) {
+	int state = glfwGetMouseButton(win.GetWindow(), button); 
+	return state == GLFW_PRESS ? true : false; 
 }
 
 bool Mouse::IsInsideRegionImpl(float x, float y, float width, float height) {
@@ -43,4 +47,13 @@ bool Mouse::IsInsideRegionImpl(float x, float y, float width, float height) {
 
 bool Mouse::IsDraggingImpl(int button) {
 	return false;
+}
+
+void Mouse::CursorPositionCallback(GLFWwindow* win, double x, double y) {
+	sX = static_cast<float>(x);
+	sY = static_cast<float>(y);
+}
+
+void Mouse::MouseButtonCallback(GLFWwindow* win, int button, int action, int mods){
+
 }

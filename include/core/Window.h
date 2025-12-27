@@ -4,8 +4,7 @@
 
 class Window {
    public:
-	Window(int width, int height, const char* title, GLFWmonitor* monitor = nullptr,
-	       GLFWwindow* share = nullptr);
+	Window(int width, int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share);
 	Window(const Window&) = delete;
 	~Window();
 
