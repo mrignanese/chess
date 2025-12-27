@@ -1,10 +1,10 @@
 #pragma once
 
 #include <GL/glew.h>
-
-#include <filesystem>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+
+#include <filesystem>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -33,8 +33,6 @@ class BoardRenderer {
 	void DrawSquare(int row, int col);
 	void DrawPiece(const std::string& name, const std::string& square);
 	void DestroyPiece(const std::string& name, const std::string& square);
-	std::pair<int, int> GetCoordinatesFromSquareName(const std::string& name) const;
-	std::string GetSquareNameFromCoordinates(int row, int col) const;
 
    private:
 	enum class SquareColor { DARK, LIGHT };

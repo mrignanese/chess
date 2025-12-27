@@ -18,7 +18,7 @@ INCLUDE = $(shell pkg-config --cflags glfw3 glew glm) -Iinclude/ -Idependecies/
 LD_FLAGS = $(shell pkg-config --static --libs glfw3 glew) -lGL
 
 SRC = $(wildcard src/*.cpp src/renderer/*.cpp dependecies/stb_image/stb_image.cpp \
-        dependecies/imgui/*.cpp src/core/*.cpp src/game/*.cpp)
+        dependecies/imgui/*.cpp src/core/*.cpp src/game/*.cpp src/game/utilities/*.cpp)
 
 # consider each .cpp file, and create corresponding .o file in build/
 OBJ = $(patsubst %.cpp, $(BUILD_DIR)/%.o, $(SRC))

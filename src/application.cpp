@@ -6,7 +6,7 @@
 
 #include "core/Mouse.h"
 #include "core/Window.h"
-#include "game//utilities/ChessCoordinates.h"
+#include "game/utilities/ChessCoordinates.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
@@ -56,14 +56,14 @@ int main() {
 
 			int row = y / size;
 			int col = x / size;
-			std::cout << "row = " << row << " " << "col = " << col << std::endl;
-			
-			std::string square = GetSquareNameFromCoordinates(row, col);
-			//char squareName[2];
-			//squareName[0] = col + 97;  // 97 is ASCII code for 'a' (first column)
-			//squareName[1] = row + 1;
-			//std::string square(squareName);
-			//std::cout << squareName[0] << " " << squareName[1] << std::endl;
+			std::cout << "row = " << 7 - row << " " << "col = " << col << std::endl;
+
+			std::string square = GetSquareNameFromCoordinates(7-row, col);
+			// char squareName[2];
+			// squareName[0] = col + 97;  // 97 is ASCII code for 'a' (first column)
+			// squareName[1] = row + 1;
+			// std::string square(squareName);
+			// std::cout << squareName[0] << " " << squareName[1] << std::endl;
 			std::cout << "Mouse is in square " << square << std::endl;
 		}
 		/*

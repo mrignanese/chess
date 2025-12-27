@@ -1,6 +1,7 @@
 #include "renderer/BoardRenderer.h"
 
 #include "game/InitialPosition.h"
+#include "game/utilities/ChessCoordinates.h"
 #include "renderer/Renderer.h"
 
 BoardRenderer::BoardRenderer(const Window& window) :
@@ -25,8 +26,8 @@ BoardRenderer::BoardRenderer(const Window& window) :
 	mSquareShader.Bind();
 	mPieceShader.Bind();
 
-	mProj = glm::ortho(0.0f, (float)window.GetFrameBufferWidth(), 0.0f,
-	                   (float)window.GetFrameBufferHeight(), -1.0f, 1.0f);
+	mProj = glm::ortho(0.0f, static_cast<float>(window.GetFrameBufferWidth()), 0.0f,
+	                   static_cast<float>(window.GetFrameBufferHeight()), -1.0f, 1.0f);
 	mView = glm::mat4(1.0f);
 	mModel = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	mMVP = mProj * mView * mModel;
@@ -103,18 +104,4 @@ void BoardRenderer::DrawPiece(const std::string& name, const std::string& square
 }
 
 void BoardRenderer::DestroyPiece(const std::string& name, const std::string& square) {
-}
-
-std::pair<int, int> BoardRenderer::GetCoordinatesFromSquareName(const std::string& name) const {
-	// offset col and row so that 'a1' square is (0,0)
-	int row = std::atoi(&name[1]) - 1;  // row 1 of chessboard is row 0
-	int col = name[0] - 'a';            // column 'a' is column 0
-	return {col, row};
-}
-
-std::string BoardRenderer::GetSquareNameFromCoordinates(int row, int col) const {
-	char squareName[2];
-	squareName[0] = col + 97;  // 97 is ASCII code for 'a' (first column)
-	squareName[1] = row + 1;
-	return std::string(squareName);
 }
