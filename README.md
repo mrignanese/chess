@@ -19,6 +19,9 @@ sudo apt install libglfw3-dev libglew-dev libglm-dev
 ## Build and run
 To build the source code a Makefile is used:
 ```bash
-make # make clean to delete all build files
+make DEBUG=1 # build with debug symbols
+make         # build in release mode
+
+# to run the application
 ./build/chess
 ```

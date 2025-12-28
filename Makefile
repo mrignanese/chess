@@ -11,8 +11,15 @@
 ########################################
 
 CXX = g++
-CXX_FLAGS = -Wall -g -O0 -std=c++20
+CXX_FLAGS = -Wall -std=c++20
 BUILD_DIR = ./build
+DEBUG ?= 0
+
+ifeq ($(DEBUG), 1)
+	CXX_FLAGS += -g -O0 -DDEBUG
+else
+	CXX_FLAGS += -O2
+endif
 
 INCLUDE = $(shell pkg-config --cflags glfw3 glew glm) -Iinclude/ -Idependecies/
 LD_FLAGS = $(shell pkg-config --static --libs glfw3 glew) -lGL

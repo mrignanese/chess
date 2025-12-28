@@ -5,7 +5,8 @@
 *.o
 *.obj
 *.out
-build/*
+build
+compile_commands.json
 
 # notes
 *.txt
