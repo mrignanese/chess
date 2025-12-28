@@ -4,3 +4,4 @@
 
 std::pair<int, int> GetCoordinatesFromSquareName(const std::string& name);
 std::string GetSquareNameFromCoordinates(int row, int col);
+std::string GetSquareNameFromMousePosition(const Window& window);

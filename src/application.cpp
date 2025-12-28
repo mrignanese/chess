@@ -2,11 +2,11 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
-#include <memory>
 
 #include "core/Mouse.h"
 #include "core/Window.h"
 #include "game/utilities/ChessCoordinates.h"
+#include "game/utilities/ChessLog.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
@@ -37,6 +37,12 @@ int main() {
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = "../build/imgui.ini";
 
+	#if DEBUG
+		std::cout << "DEBUG Mode\n";
+	#else
+		std::cout << "RELEASE Mode\n";
+	#endif
+
 	// window loop for rendering
 	while (!window.ShouldClose()) {
 		Renderer::Clear();
@@ -48,23 +54,8 @@ int main() {
 		board.Draw();
 
 		if (Mouse::IsButtonPressed(window, GLFW_MOUSE_BUTTON_LEFT)) {
-			float size = window.GetFrameBufferHeight() / 8;
-			std::cout << "Left button pressed\n";
-			float x = Mouse::GetX();
-			float y = Mouse::GetY();
-			std::cout << "x = " << x << " " << "y = " << y << std::endl;
-
-			int row = y / size;
-			int col = x / size;
-			std::cout << "row = " << 7 - row << " " << "col = " << col << std::endl;
-
-			std::string square = GetSquareNameFromCoordinates(7-row, col);
-			// char squareName[2];
-			// squareName[0] = col + 97;  // 97 is ASCII code for 'a' (first column)
-			// squareName[1] = row + 1;
-			// std::string square(squareName);
-			// std::cout << squareName[0] << " " << squareName[1] << std::endl;
-			std::cout << "Mouse is in square " << square << std::endl;
+			std::string square = GetSquareNameFromMousePosition(window);
+			CHESS_LOG("Mouse is in square", square);
 		}
 		/*
 		{
@@ -85,6 +76,8 @@ int main() {
 	ImGui_ImplGlfw_Shutdown();
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui::DestroyContext();
+
+	glfwTerminate();
 
 	return 0;
 }
