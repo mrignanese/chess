@@ -17,6 +17,7 @@ Window::Window(int width, int height, const char* title, GLFWmonitor* monitor, G
 
 	// make the window's context current
 	glfwMakeContextCurrent(mWindow);
+	glfwSetWindowUserPointer(mWindow, this);
 	// get actual pixel size of the framebuffer attached to the window.
 	// Frame buffer width and height are not equal to window width and height
 	glfwGetFramebufferSize(mWindow, &mFBWidth, &mFBHeight);
@@ -26,7 +27,7 @@ Window::Window(int width, int height, const char* title, GLFWmonitor* monitor, G
 }
 
 Window::~Window() {
-	glfwTerminate();
+	glfwDestroyWindow(mWindow);
 }
 
 int Window::ShouldClose() const {
@@ -66,5 +67,10 @@ GLFWwindow* Window::GetWindow() const {
 }
 
 void Window::FramebufferSizeCallback(GLFWwindow* win, int width, int height) {
+	// get window user pointer to update framebuffer width and height
+	Window* window = static_cast<Window*>(glfwGetWindowUserPointer(win));
+	window->mFBHeight = height;
+	window->mFBWidth = width;
+
 	glViewport(0, 0, width, height);
 }
