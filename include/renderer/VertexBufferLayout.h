@@ -8,9 +8,9 @@
 #include "GLError.h"
 
 struct VertexBufferElement {
-	GLenum type;			// element data type (e.g, GL_FLOAT, GL_UNSIGNED_INT, etc.)
-	GLuint count;			// how many elements of the specified type
-	GLboolean normalized;	// true only for GL_UNSIGNED_BYTE
+	GLenum type;           // element data type (e.g, GL_FLOAT, GL_UNSIGNED_INT, etc.)
+	GLuint count;          // how many elements of the specified type
+	GLboolean normalized;  // true only for GL_UNSIGNED_BYTE
 
 	static uint32_t GetSizeOfType(uint32_t type) {
 		switch (type) {

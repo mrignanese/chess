@@ -18,6 +18,7 @@ Window::Window(int width, int height, const char* title, GLFWmonitor* monitor, G
 	// make the window's context current
 	glfwMakeContextCurrent(mWindow);
 	glfwSetWindowUserPointer(mWindow, this);
+
 	// get actual pixel size of the framebuffer attached to the window.
 	// Frame buffer width and height are not equal to window width and height
 	glfwGetFramebufferSize(mWindow, &mFBWidth, &mFBHeight);

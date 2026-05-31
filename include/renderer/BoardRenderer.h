@@ -19,13 +19,18 @@
 #include "renderer/VertexBuffer.h"
 #include "renderer/VertexBufferLayout.h"
 
+class Piece;
+
+using Board = std::unordered_map<std::string, std::shared_ptr<Piece>>;
+
 class BoardRenderer {
    public:
-	BoardRenderer(const Window& window);
+	// BoardRenderer() = default;
+	BoardRenderer(float frameBufferWidth, float frameBufferHeight);
 	BoardRenderer(const BoardRenderer&) = delete;
 	~BoardRenderer() = default;
 
-	void Draw();
+	void Draw(const Board& board);
 
 	BoardRenderer& operator=(const BoardRenderer&) = delete;
 
@@ -37,8 +42,8 @@ class BoardRenderer {
    private:
 	enum class SquareColor { DARK, LIGHT };
 
-	float mPositions[16];	// array containing vertex 2D coordinates and texture 2D coordinates
-	uint32_t mIndices[6];	// indices to access mPositions elements
+	float mPositions[16];  // array containing vertex 2D coordinates and texture 2D coordinates
+	uint32_t mIndices[6];  // indices to access mPositions elements
 	VertexBuffer mVb;
 	IndexBuffer mIb;
 	VertexArray mVa;

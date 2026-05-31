@@ -1,10 +1,11 @@
 #include "renderer/BoardRenderer.h"
 
 #include "game/InitialPosition.h"
+#include "game/pieces/Piece.h"
 #include "game/utilities/ChessCoordinates.h"
 #include "renderer/Renderer.h"
 
-BoardRenderer::BoardRenderer(const Window& window) :
+BoardRenderer::BoardRenderer(float frameBufferWidth, float frameBufferHeight) :
     mPositions{
         0.0f, 0.0f, 0.0f, 0.0f,  // bottom-left corner
         1.0f, 0.0f, 1.0f, 0.0f,  // bottom-right corner
@@ -26,14 +27,13 @@ BoardRenderer::BoardRenderer(const Window& window) :
 	mSquareShader.Bind();
 	mPieceShader.Bind();
 
-	mProj = glm::ortho(0.0f, static_cast<float>(window.GetFrameBufferWidth()), 0.0f,
-	                   static_cast<float>(window.GetFrameBufferHeight()), -1.0f, 1.0f);
+	mProj = glm::ortho(0.0f, frameBufferWidth, 0.0f, frameBufferHeight, -1.0f, 1.0f);
 	mView = glm::mat4(1.0f);
 	mModel = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	mMVP = mProj * mView * mModel;
 
 	// compute square size so that the board fits considering window height
-	mSquareSize = static_cast<float>(window.GetFrameBufferHeight() / 8);
+	mSquareSize = frameBufferHeight / 8;
 
 	// consider all png files that are used to draw pieces and load textures
 	std::filesystem::path pieceTexturesPath("resources/textures/pieces");
@@ -49,7 +49,7 @@ BoardRenderer::BoardRenderer(const Window& window) :
 	}
 }
 
-void BoardRenderer::Draw() {
+void BoardRenderer::Draw(const Board& board) {
 	// draw squares
 	for (int row = 0; row < 8; row++) {
 		for (int col = 0; col < 8; col++) {
@@ -57,9 +57,9 @@ void BoardRenderer::Draw() {
 		}
 	}
 	// draw pieces in initial position
-	for (const auto& element : initialPosition) {
+	for (const auto& element : board) {
 		const auto& [square, piece] = element;
-		DrawPiece(piece, square);
+		DrawPiece(piece->GetName(), square);
 	}
 }
 

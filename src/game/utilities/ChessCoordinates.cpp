@@ -19,9 +19,8 @@ std::string GetSquareNameFromCoordinates(int row, int col) {
 	return squareName;
 }
 
-std::string GetSquareNameFromMousePosition(const Window& window) {
-	// compute frame buffer height if window has been resized
-	float squareSize = window.GetFrameBufferHeight() / 8;
+std::string GetSquareNameFromMousePosition(const float squareSize) {
+	// square size as parameter is needed if window has been resized
 
 	float x = Mouse::GetX();
 	float y = Mouse::GetY();

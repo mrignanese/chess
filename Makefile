@@ -13,7 +13,7 @@
 CXX = g++
 CXX_FLAGS = -Wall -std=c++20
 BUILD_DIR = ./build
-DEBUG ?= 0
+DEBUG ?= 1
 
 ifeq ($(DEBUG), 1)
 	CXX_FLAGS += -g -O0 -DDEBUG
@@ -25,7 +25,8 @@ INCLUDE = $(shell pkg-config --cflags glfw3 glew glm) -Iinclude/ -Idependecies/
 LD_FLAGS = $(shell pkg-config --static --libs glfw3 glew) -lGL
 
 SRC = $(wildcard src/*.cpp src/renderer/*.cpp dependecies/stb_image/stb_image.cpp \
-        dependecies/imgui/*.cpp src/core/*.cpp src/game/*.cpp src/game/utilities/*.cpp)
+        dependecies/imgui/*.cpp src/core/*.cpp src/game/*.cpp src/game/utilities/*.cpp \
+		src/game/pieces/*.cpp)
 
 # consider each .cpp file, and create corresponding .o file in build/
 OBJ = $(patsubst %.cpp, $(BUILD_DIR)/%.o, $(SRC))

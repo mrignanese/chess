@@ -9,6 +9,7 @@ class Renderer {
 	Renderer(const Renderer&) = delete;
 	~Renderer() = default;
 
+	static void Init();
 	static Renderer& Get();
 
 	inline static void Clear() {

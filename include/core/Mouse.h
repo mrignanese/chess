@@ -16,9 +16,13 @@ class Mouse {
 		return Get()->IsButtonPressedImpl(win, button);
 	};
 
-	inline static bool IsInsideRegion(float x, float y, float width, float height) {
-		return Get()->IsInsideRegionImpl(x, y, width, height);
-	};
+	inline static bool IsButtonReleased(const Window& win, int button) {
+		return Get()->IsButtonReleasedImpl(win, button);
+	}
+
+	inline static bool WasButtonPressed(const Window& win, int button) {
+		return Get()->WasButtonPressedImpl(win, button);
+	}
 
 	inline static bool IsDragging(int button) {
 		return Get()->IsDraggingImpl(button);
@@ -47,9 +51,14 @@ class Mouse {
 	static GLFWcursor* sCursor;
 	static bool sInitialized;
 
+	// bool arrays to keep track of button states
+	static bool sButtons[GLFW_MOUSE_BUTTON_LAST + 1];
+	static bool sButtonsPressedThisFrame[GLFW_MOUSE_BUTTON_LAST + 1];
+
 	// implementations of static methods
 	bool IsButtonPressedImpl(const Window& win, int button);
-	bool IsInsideRegionImpl(float x, float y, float width, float height);
+	bool IsButtonReleasedImpl(const Window& win, int button);
+	bool WasButtonPressedImpl(const Window& win, int button);
 	bool IsDraggingImpl(int button);
 
 	// callbacks

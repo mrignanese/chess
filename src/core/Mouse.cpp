@@ -7,10 +7,13 @@ int Mouse::sButton = 0;
 GLFWcursor* Mouse::sCursor = nullptr;
 bool Mouse::sInitialized = false;
 
+bool Mouse::sButtons[GLFW_MOUSE_BUTTON_LAST + 1] = {};
+bool Mouse::sButtonsPressedThisFrame[GLFW_MOUSE_BUTTON_LAST + 1] = {};
+
 Mouse::Mouse(const Window& window, int shape) {
 	sCursor = glfwCreateStandardCursor(shape);
 	glfwSetCursor(window.GetWindow(), sCursor);
-	
+
 	// set callback for mouse position and buttons status
 	glfwSetCursorPosCallback(window.GetWindow(), CursorPositionCallback);
 	glfwSetMouseButtonCallback(window.GetWindow(), MouseButtonCallback);
@@ -37,11 +40,21 @@ Mouse* Mouse::Get() {
 }
 
 bool Mouse::IsButtonPressedImpl(const Window& win, int button) {
-	int state = glfwGetMouseButton(win.GetWindow(), button); 
-	return state == GLFW_PRESS ? true : false; 
+	int state = glfwGetMouseButton(win.GetWindow(), button);
+	return state == GLFW_PRESS ? true : false;
 }
 
-bool Mouse::IsInsideRegionImpl(float x, float y, float width, float height) {
+bool Mouse::IsButtonReleasedImpl(const Window& win, int button) {
+	int state = glfwGetMouseButton(win.GetWindow(), button);
+	return state == GLFW_RELEASE ? true : false;
+}
+
+bool Mouse::WasButtonPressedImpl(const Window& win, int button) {
+	if (sButtonsPressedThisFrame[button]) {
+		sButtonsPressedThisFrame[button] = false;
+		return true;
+	}
+
 	return false;
 }
 
@@ -54,6 +67,12 @@ void Mouse::CursorPositionCallback(GLFWwindow* win, double x, double y) {
 	sY = static_cast<float>(y);
 }
 
-void Mouse::MouseButtonCallback(GLFWwindow* win, int button, int action, int mods){
-
+void Mouse::MouseButtonCallback(GLFWwindow* win, int button, int action, int mods) {
+	if (action == GLFW_PRESS) {
+		sButtons[button] = true;
+		sButtonsPressedThisFrame[button] = true;
+	} else if (action == GLFW_RELEASE) {
+		sButtons[button] = false;
+		sButtonsPressedThisFrame[button] = false;
+	}
 }

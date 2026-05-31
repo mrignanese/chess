@@ -8,10 +8,15 @@
 
 Renderer::Renderer() {
 	if (glewInit() != GLEW_OK)
-		std::cout << "Failed to initialize GLEW!" << std::endl;
+		std::cerr << "Failed to initialize GLEW!" << std::endl;
 
-	// TODO: enable this print only in debug mode 
+	// TODO: enable this print only in debug mode
 	std::cout << glGetString(GL_VERSION) << std::endl;
+	EnableBlendingImpl();
+}
+
+void Renderer::Init() {
+	Get();
 }
 
 Renderer& Renderer::Get() {
